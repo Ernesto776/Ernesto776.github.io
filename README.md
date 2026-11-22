@@ -28,51 +28,46 @@ Actions at:
 ```
 Ernesto776.github.io/
 ├── .github/workflows/
-│   └── deploy.yml          # Automated CI/CD deployment to GitHub Pages
-├── index.html              # HTML entrypoint with metadata and fonts
-├── package.json            # Dependencies and scripts
-├── vite.config.js          # Vite and Vitest configuration
-├── tailwind.config.js      # Tailwind configuration with glass colors
-├── postcss.config.js       # PostCSS plugins
+│   └── deploy.yml                # CI/CD deploy + Try Harder HTML5 bundle
+├── index.html                    # Main portfolio HTML entrypoint
+├── play-try-harder.html          # Dedicated Try Harder Arcade Player page
+├── package.json                  # Dependencies and scripts
+├── vite.config.js                # Vite multi-page & Vitest configuration
+├── vite-plugins/
+│   └── localGamesPlugin.js       # Local dev/preview server for game builds
+├── tailwind.config.js            # Tailwind config with glass tokens
+├── postcss.config.js             # PostCSS plugins
 ├── src/
-│   ├── main.jsx            # React root DOM mount
-│   ├── App.jsx             # Main application layout and ambient orbs
-│   ├── index.css           # Global stylesheet and glassmorphic classes
+│   ├── main.jsx                  # Portfolio React root mount
+│   ├── playTryHarderMain.jsx     # Arcade Player React root mount
+│   ├── App.jsx                   # Main portfolio layout & ambient orbs
+│   ├── index.css                 # Global stylesheet & glass utility classes
 │   ├── data/
-│   │   └── projectsData.js # Central project & skill data registry
+│   │   └── projectsData.js       # Central project & skill data registry
+│   ├── utils/
+│   │   └── windowLauncher.js     # Popup launcher with tab fallback
 │   └── components/
-│       ├── Navbar.jsx          # Glassmorphic top navigation bar
-│       ├── Hero.jsx            # Hero presentation banner
-│       ├── ProjectCard.jsx     # Reusable glassmorphic project card
-│       ├── ProjectShowcase.jsx # Filterable projects grid
-│       ├── SkillsSection.jsx   # Categorized skills matrix
-│       └── Footer.jsx          # Contact links and footer
+│       ├── Navbar.jsx            # Glassmorphic top navigation bar
+│       ├── Hero.jsx              # Hero presentation banner
+│       ├── ProjectCard.jsx       # Reusable glassmorphic project card
+│       ├── ProjectShowcase.jsx   # Filterable projects grid
+│       ├── TryHarderPlayer.jsx   # Responsive 16:9 HTML5 arcade player
+│       ├── SkillsSection.jsx     # Categorized skills matrix
+│       └── Footer.jsx            # Contact links and footer
 └── tests/
-    ├── setupTests.js       # Testing library environment setup
-    ├── ProjectCard.test.jsx# Component tests
-    └── projectsData.test.js# Data schema integrity tests
+    ├── setupTests.js             # Testing library environment setup
+    ├── App.integration.test.jsx  # Portfolio filter & play flow tests
+    ├── ProjectCard.test.jsx      # Card & Play Game button tests
+    ├── TryHarderPlayer.test.jsx  # Arcade player availability & UI tests
+    ├── localGamesPlugin.test.js  # Static middleware path safety tests
+    ├── projectsData.test.js      # Data schema integrity tests
+    └── windowLauncher.test.js    # Window open & fallback tests
 ```
 
 ---
 
-## Local Development
+## Try Harder HTML5 Arcade Player & Auto-Sync
 
-### 1. Install dependencies
-```bash
-npm install
-```
-
-### 2. Start the local development server
-```bash
-npm run dev
-```
-
-### 3. Run automated tests
-```bash
-npm test
-```
-
-### 4. Build for production
-```bash
-npm run build
-```
+Clicking **Play Game** on the *Try Harder* card opens
+`play-try-harder.html` in a dedicated centered window featuring a responsive
+16:9 canvas, reload control, fullscreen mode, and control hints.

@@ -8,9 +8,11 @@ import {
     ChevronDown,
     ChevronUp,
     ExternalLink,
+    Gamepad2,
     Sparkles
 } from 'lucide-react';
 import GithubIcon from './GithubIcon';
+import { openInNewWindow } from '../utils/windowLauncher';
 
 // Renders an individual project card with expandable architecture highlights
 export default function ProjectCard({ project }) {
@@ -21,14 +23,37 @@ export default function ProjectCard({ project }) {
         description,
         tags,
         demoUrl,
+        demoLabel,
+        demoType,
+        demoWindowName,
         githubUrl,
         featured,
         stats,
         highlights
     } = project;
 
+    const isGameDemo = demoType === 'game';
+    const actionLabel = demoLabel || 'Explore Repo';
+    const primaryLinkClass = isGameDemo
+        ? 'flex-1 py-2 px-3 rounded-lg bg-gradient-to-r from-indigo-600 ' +
+            'to-purple-600 hover:from-indigo-500 hover:to-purple-500 ' +
+            'shadow-md shadow-indigo-600/25 text-white text-xs ' +
+            'font-medium flex items-center justify-center gap-1.5 ' +
+            'transition-all'
+        : 'flex-1 py-2 px-3 rounded-lg bg-indigo-600/80 ' +
+            'hover:bg-indigo-600 text-white text-xs font-medium flex ' +
+            'items-center justify-center gap-1.5 transition-colors';
+
+    // Toggles visibility of the architecture highlights bullet list
     const toggleHighlights = () => {
         setShowHighlights((prev) => !prev);
+    };
+
+    // Opens playable game demos in a centered dedicated browser window
+    const handlePrimaryAction = (event) => {
+        if (isGameDemo) {
+            openInNewWindow(event, demoUrl, demoWindowName);
+        }
     };
 
     return (
@@ -136,13 +161,20 @@ export default function ProjectCard({ project }) {
                             href={demoUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex-1 py-2 px-3 rounded-lg bg-indigo-600/80
-                                hover:bg-indigo-600 text-white text-xs
-                                font-medium flex items-center justify-center
-                                gap-1.5 transition-colors"
+                            onClick={handlePrimaryAction}
+                            className={primaryLinkClass}
                         >
-                            <span>Explore Repo</span>
-                            <ExternalLink className="w-3.5 h-3.5" />
+                            {isGameDemo ? (
+                                <>
+                                    <Gamepad2 className="w-3.5 h-3.5" />
+                                    <span>{actionLabel}</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span>{actionLabel}</span>
+                                    <ExternalLink className="w-3.5 h-3.5" />
+                                </>
+                            )}
                         </a>
                     )}
                     {githubUrl && (

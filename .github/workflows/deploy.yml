@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  repository_dispatch:
+    types:
+      - try-harder-updated
   workflow_dispatch:
 
 permissions:
@@ -36,6 +39,71 @@ jobs:
 
       - name: Build static site
         run: npm run build
+
+      - name: Check Try Harder token availability
+        id: try_harder_auth
+        env:
+          TOKEN: ${{ secrets.TRY_HARDER_REPO_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::TRY_HARDER_REPO_TOKEN secret is not set; Try Harder HTML5 bundle will be skipped."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout Try Harder (main)
+        if: steps.try_harder_auth.outputs.enabled == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: Ernesto776/Try-Harder-restoration-project
+          ref: main
+          path: .external/try-harder
+          token: ${{ secrets.TRY_HARDER_REPO_TOKEN }}
+          fetch-depth: 1
+
+      - name: Setup Haxe
+        if: steps.try_harder_auth.outputs.enabled == 'true'
+        uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: '4.3.7'
+
+      - name: Cache Haxelib
+        if: steps.try_harder_auth.outputs.enabled == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/haxelib
+          key: haxelib-4.3.7-lime8.3.2-openfl9.5.2-flixel6.2.1
+
+      - name: Install pinned Haxelib dependencies
+        if: steps.try_harder_auth.outputs.enabled == 'true'
+        run: |
+          mkdir -p ~/haxelib
+          haxelib setup ~/haxelib
+          if [ ! -d ~/haxelib/lime/8,3,2 ]; then
+            haxelib install lime 8.3.2 --always --quiet
+          fi
+          if [ ! -d ~/haxelib/openfl/9,5,2 ]; then
+            haxelib install openfl 9,5,2 --always --quiet
+          fi
+          if [ ! -d ~/haxelib/flixel/6,2,1 ]; then
+            haxelib install flixel 6,2,1 --always --quiet
+          fi
+          haxelib set lime 8.3.2
+          haxelib set openfl 9.5.2
+          haxelib set flixel 6.2.1
+
+      - name: Build Try Harder HTML5
+        if: steps.try_harder_auth.outputs.enabled == 'true'
+        working-directory: .external/try-harder
+        run: haxelib run lime build html5
+
+      - name: Bundle Try Harder HTML5 into dist
+        if: steps.try_harder_auth.outputs.enabled == 'true'
+        run: |
+          mkdir -p dist/games/try-harder
+          cp -r .external/try-harder/export/html5/bin/. dist/games/try-harder/
+          test -f dist/games/try-harder/index.html && test -f dist/games/try-harder/TryHarder.js
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

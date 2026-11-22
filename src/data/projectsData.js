@@ -10,6 +10,20 @@ export const CATEGORIES = [
     { id: 'web', label: 'Web Applications' }
 ];
 
+export const TRY_HARDER_CONFIG = {
+    title: 'Try Harder',
+    branch: 'main',
+    playerUrl: './play-try-harder.html',
+    embedUrl: './games/try-harder/index.html',
+    repoUrl: 'https://github.com/Ernesto776/Try-Harder-restoration-project',
+    windowName: 'TryHarderGameWindow',
+    controls: [
+        { keys: 'Space / W / Up / Click', action: 'Jump & Double Jump' },
+        { keys: 'Hold Jump', action: 'Glide (when unlocked)' },
+        { keys: 'P / Esc', action: 'Pause Menu' }
+    ]
+};
+
 export const PROJECTS = [
     {
         id: 'microsoft-grammar-spellcheck',
@@ -76,22 +90,33 @@ export const PROJECTS = [
         id: 'try-harder-restoration-project',
         title: 'Try Harder Game Restoration & Port',
         description:
-            'Source code restoration and modern 64-bit Android port of the ' +
-            'classic platformer game Try Harder, targeting modern Android ' +
-            'SDK 34 using Haxe, HaxeFlixel, OpenFL, and Lime.',
+            'Source code restoration with an HTML5 web build playable ' +
+            'directly from the main branch. A 64-bit port of the game ' +
+            'Try Harder, usable on modern android devices using Haxe, ' +
+            'HaxeFlixel, OpenFL, and Lime.',
         category: 'systems',
-        tags: ['Haxe', 'HaxeFlixel', 'OpenFL', 'Android SDK', 'C++ / Lime'],
+        tags: [
+            'Haxe',
+            'HaxeFlixel',
+            'OpenFL',
+            'HTML5',
+            'Android SDK',
+            'C++ / Lime'
+        ],
         highlights: [
+            'Automated HTML5 release builds to this webpage synced directly ' + 
+                'from the main branch via CI/CD.',
             'Targeting modern Android SDK 34 with 64-bit arm64 and x64 support.',
             'Native cross-platform compilation via Lime and Haxe C++ toolchains.',
             'Full asset mapping, orientation management, and 60 FPS vsync.'
         ],
-        demoUrl:
-            'https://github.com/Ernesto776/Try-Harder-restoration-project',
-        githubUrl:
-            'https://github.com/Ernesto776/Try-Harder-restoration-project',
+        demoUrl: TRY_HARDER_CONFIG.playerUrl,
+        demoLabel: 'Play Game',
+        demoType: 'game',
+        demoWindowName: TRY_HARDER_CONFIG.windowName,
+        githubUrl: TRY_HARDER_CONFIG.repoUrl,
         featured: true,
-        stats: 'Android SDK 34 & 64-bit'
+        stats: 'Playable HTML5 & 64-bit Android'
     },
     {
         id: 'portfolio-v1',

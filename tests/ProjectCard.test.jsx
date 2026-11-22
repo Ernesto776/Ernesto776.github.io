@@ -2,7 +2,13 @@
  * Unit and component tests for ProjectCard component.
  */
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import {
+    describe,
+    it,
+    expect,
+    vi,
+    afterEach
+} from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ProjectCard from '../src/components/ProjectCard';
 
@@ -21,6 +27,15 @@ describe('ProjectCard Component', () => {
         featured: true,
         stats: 'Active'
     };
+
+    let openSpy;
+
+    afterEach(() => {
+        if (openSpy) {
+            openSpy.mockRestore();
+            openSpy = undefined;
+        }
+    });
 
     it('renders project title and description', () => {
         render(<ProjectCard project={mockProject} />);
@@ -74,5 +89,33 @@ describe('ProjectCard Component', () => {
             'href',
             'https://github.com/example/repo'
         );
+    });
+
+    it('renders Play Game CTA and opens a new window for game demos', () => {
+        const mockPopup = { opener: window, focus: vi.fn() };
+        openSpy = vi.spyOn(window, 'open').mockReturnValue(mockPopup);
+
+        const gameProject = {
+            ...mockProject,
+            id: 'try-harder-test',
+            demoUrl: './play-try-harder.html',
+            demoLabel: 'Play Game',
+            demoType: 'game',
+            demoWindowName: 'TryHarderGameWindow'
+        };
+
+        render(<ProjectCard project={gameProject} />);
+        const playLink = screen.getByText('Play Game').closest('a');
+
+        expect(playLink).toHaveAttribute('href', './play-try-harder.html');
+        expect(playLink).toHaveAttribute('target', '_blank');
+
+        fireEvent.click(playLink);
+        expect(openSpy).toHaveBeenCalledWith(
+            './play-try-harder.html',
+            'TryHarderGameWindow',
+            expect.stringContaining('resizable=yes')
+        );
+        expect(mockPopup.focus).toHaveBeenCalledTimes(1);
     });
 });
