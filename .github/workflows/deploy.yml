@@ -84,10 +84,10 @@ jobs:
             haxelib install lime 8.3.2 --always --quiet
           fi
           if [ ! -d ~/haxelib/openfl/9,5,2 ]; then
-            haxelib install openfl 9,5,2 --always --quiet
+            haxelib install openfl 9.5.2 --always --quiet
           fi
           if [ ! -d ~/haxelib/flixel/6,2,1 ]; then
-            haxelib install flixel 6,2,1 --always --quiet
+            haxelib install flixel 6.2.1 --always --quiet
           fi
           haxelib set lime 8.3.2
           haxelib set openfl 9.5.2
