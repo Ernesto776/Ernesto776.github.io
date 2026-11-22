@@ -80,10 +80,10 @@ jobs:
         run: |
           mkdir -p ~/haxelib
           haxelib setup ~/haxelib
-          if [ ! -d ~/haxelib/lime/8,3,2 ]; then
+          if [ ! -d ~/haxelib/lime/8.3.2 ]; then
             haxelib install lime 8.3.2 --always --quiet
           fi
-          if [ ! -d ~/haxelib/openfl/9,5,2 ]; then
+          if [ ! -d ~/haxelib/openfl/9.5.2 ]; then
             haxelib install openfl 9.5.2 --always --quiet
           fi
           if [ ! -d ~/haxelib/flixel/6,2,1 ]; then
